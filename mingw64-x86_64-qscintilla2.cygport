@@ -1,0 +1,36 @@
+CROSS_HOST="x86_64-w64-mingw32"
+inherit cross qt4-qmake
+
+NAME="mingw64-x86_64-qscintilla2"
+VERSION=2.7.2
+RELEASE=1
+CATEGORY="Devel"
+SUMMARY="Qt Scintilla editor class for Win64 toolchain"
+DESCRIPTION="QScintilla is a port to Qt of Neil Hodgson's Scintilla C++ editor
+class.  As well as features found in standard text editing components,
+QScintilla includes features especially useful when editing and debugging
+source code. These include support for syntax styling, error indicators, code
+completion and call tips."
+HOMEPAGE="http://www.riverbankcomputing.com/software/qscintilla/"
+SRC_URI="mirror://sourceforge/pyqt/QScintilla-gpl-${VERSION}.tar.gz"
+SRC_DIR="QScintilla-gpl-${VERSION}"
+PATCH_URI="2.7.2-build-intree.patch"
+
+src_compile() {
+	lndirs
+
+	for d in Qt4Qt5 example-Qt4Qt5
+	do
+		cd ${B}/${d}
+		cygqmake4
+		cygmake
+	done
+}
+
+src_install() {
+	for d in Qt4Qt5
+	do
+		cd ${B}/${d}
+		qt4_qmake_install
+	done
+}
