@@ -1,9 +1,9 @@
 CROSS_HOST="x86_64-w64-mingw32"
-inherit cross qt4-qmake
+inherit cross qt4-qmake qt5-qmake
 
 NAME="mingw64-x86_64-qscintilla2"
 VERSION=2.8.4
-RELEASE=1
+RELEASE=2
 CATEGORY="Devel"
 SUMMARY="Qt Scintilla editor class for Win64 toolchain"
 DESCRIPTION="QScintilla is a port to Qt of Neil Hodgson's Scintilla C++ editor
@@ -14,23 +14,61 @@ completion and call tips."
 HOMEPAGE="http://www.riverbankcomputing.com/software/qscintilla/"
 SRC_URI="mirror://sourceforge/pyqt/QScintilla-gpl-${VERSION}.tar.gz"
 SRC_DIR="QScintilla-gpl-${VERSION}"
-PATCH_URI="2.8.1-build-intree.patch"
+PATCH_URI="
+	http://pkgs.fedoraproject.org/cgit/qscintilla.git/plain/QScintilla-gpl-2.8.4-qt5.patch
+	2.8.4-build-casesensitive.patch
+	2.8.4-dllexport.patch
+"
+
+PKG_NAMES="${NAME} ${NAME}-qt5"
+mingw64_x86_64_qscintilla2_CONTENTS="
+	${CROSS_BINDIR#/}/qscintilla2.dll
+	${CROSS_INCLUDEDIR#/}/qt4/Qsci/
+	${CROSS_LIBDIR#/}/libqscintilla2.dll.a
+	${QT4_DATADIR#/}/
+	usr/share/doc/${NAME}/"
+mingw64_x86_64_qscintilla2_qt5_CONTENTS="
+	${CROSS_BINDIR#/}/qscintilla2-qt5.dll
+	${CROSS_INCLUDEDIR#/}/qt5/Qsci/
+	${CROSS_LIBDIR#/}/libqscintilla2-qt5.dll.a
+	${QT5_DATADIR#/}/
+	usr/share/doc/${NAME}-qt5/"
 
 src_compile() {
-	lndirs
+	export QMAKEFEATURES=${S}/Qt4Qt5/features
 
-	for d in Qt4Qt5 example-Qt4Qt5
+	for v in 4 5
 	do
-		cd ${B}/${d}
-		cygqmake4
+		mkdir -p ${B}/Qt$v
+		cd ${B}/Qt$v
+		cygqmake$v ${S}/Qt4Qt5
+		cygmake
+
+#		mkdir -p ${B}/designer-Qt$v
+#		cd ${B}/designer-Qt$v
+#		cygqmake$v ${S}/designer-Qt4Qt5 INCLUDEPATH+=${S}/Qt4Qt5 QMAKE_LFLAGS+=-L../Qt$v
+#		cygmake
+
+		mkdir -p ${B}/example-Qt$v
+		cd ${B}/example-Qt$v
+		cygqmake$v ${S}/example-Qt4Qt5 INCLUDEPATH+=${S}/Qt4Qt5 QMAKE_LFLAGS+=-L../Qt$v/release
 		cygmake
 	done
 }
 
 src_install() {
-	for d in Qt4Qt5
+	for v in 4 5
 	do
-		cd ${B}/${d}
-		qt4_qmake_install
+		for d in Qt$v # designer-Qt$v
+		do
+			cd ${B}/${d}
+			qt${v}_qmake_install
+		done
 	done
+
+	cd ${S}
+	dodoc LICENSE.* NEWS README *.TXT
+
+	docinto /${NAME}-qt5
+	dodoc LICENSE.* NEWS README *.TXT
 }
