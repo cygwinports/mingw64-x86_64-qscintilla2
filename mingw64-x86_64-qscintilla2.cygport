@@ -2,8 +2,8 @@ CROSS_HOST="x86_64-w64-mingw32"
 inherit cross qt4-qmake qt5-qmake
 
 NAME="mingw64-x86_64-qscintilla2"
-VERSION=2.8.4
-RELEASE=2
+VERSION=2.9
+RELEASE=1
 CATEGORY="Devel"
 SUMMARY="Qt Scintilla editor class for Win64 toolchain"
 DESCRIPTION="QScintilla is a port to Qt of Neil Hodgson's Scintilla C++ editor
@@ -15,8 +15,9 @@ HOMEPAGE="http://www.riverbankcomputing.com/software/qscintilla/"
 SRC_URI="mirror://sourceforge/pyqt/QScintilla-gpl-${VERSION}.tar.gz"
 SRC_DIR="QScintilla-gpl-${VERSION}"
 PATCH_URI="
-	http://pkgs.fedoraproject.org/cgit/qscintilla.git/plain/QScintilla-gpl-2.8.4-qt5.patch
-	2.8.4-build-casesensitive.patch
+	http://pkgs.fedoraproject.org/cgit/qscintilla.git/plain/QScintilla-gpl-2.9-qt5.patch
+	http://pkgs.fedoraproject.org/cgit/qscintilla.git/plain/QScintilla-gpl-2.9-qt5_mkspecs.patch
+	2.9-build-casesensitive.patch
 	2.8.4-dllexport.patch
 "
 
@@ -25,13 +26,17 @@ mingw64_x86_64_qscintilla2_CONTENTS="
 	${CROSS_BINDIR#/}/qscintilla2.dll
 	${CROSS_INCLUDEDIR#/}/qt4/Qsci/
 	${CROSS_LIBDIR#/}/libqscintilla2.dll.a
-	${QT4_DATADIR#/}/
+	${QT4_MKSPECSDIR#/}
+	${QT4_DATADIR#/}/qsci/
+	${QT4_DATADIR#/}/translations/
 	usr/share/doc/${NAME}/"
 mingw64_x86_64_qscintilla2_qt5_CONTENTS="
 	${CROSS_BINDIR#/}/qscintilla2-qt5.dll
 	${CROSS_INCLUDEDIR#/}/qt5/Qsci/
 	${CROSS_LIBDIR#/}/libqscintilla2-qt5.dll.a
-	${QT5_DATADIR#/}/
+	${QT5_MKSPECSDIR#/}
+	${QT5_DATADIR#/}/qsci/
+	${QT5_DATADIR#/}/translations/
 	usr/share/doc/${NAME}-qt5/"
 
 src_compile() {
