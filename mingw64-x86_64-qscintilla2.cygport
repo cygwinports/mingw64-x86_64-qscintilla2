@@ -2,7 +2,7 @@ CROSS_HOST="x86_64-w64-mingw32"
 inherit cross qt4-qmake qt5-qmake
 
 NAME="mingw64-x86_64-qscintilla2"
-VERSION=2.9
+VERSION=2.9.3
 RELEASE=1
 CATEGORY="Devel"
 SUMMARY="Qt Scintilla editor class for Win64 toolchain"
@@ -12,13 +12,11 @@ QScintilla includes features especially useful when editing and debugging
 source code. These include support for syntax styling, error indicators, code
 completion and call tips."
 HOMEPAGE="http://www.riverbankcomputing.com/software/qscintilla/"
-SRC_URI="mirror://sourceforge/pyqt/QScintilla-gpl-${VERSION}.tar.gz"
-SRC_DIR="QScintilla-gpl-${VERSION}"
+SRC_URI="mirror://sourceforge/pyqt/QScintilla_gpl-${VERSION}.tar.gz"
+SRC_DIR="QScintilla_gpl-${VERSION}"
 PATCH_URI="
-	http://pkgs.fedoraproject.org/cgit/qscintilla.git/plain/QScintilla-gpl-2.9-qt5.patch
-	http://pkgs.fedoraproject.org/cgit/qscintilla.git/plain/QScintilla-gpl-2.9-qt5_mkspecs.patch
+	http://pkgs.fedoraproject.org/cgit/rpms/qscintilla.git/plain/QScintilla_gpl-2.9.3-qt5.patch
 	2.9-build-casesensitive.patch
-	2.8.4-dllexport.patch
 "
 
 PKG_NAMES="${NAME} ${NAME}-qt5"
